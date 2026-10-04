@@ -1,40 +1,63 @@
-# Workflow name
+# Validates React/Pega component changes before merging into main.
 name: Validate PRs
+
 permissions:
   contents: read
   pull-requests: write
 
 on:
-  # Event for the workflow to run on
-  push:
-    branches:
-      - master
+  # Validate pull requests targeting the main branch.
   pull_request:
     branches:
       - master
+
+  # Allows manual execution from the GitHub Actions UI.
+  workflow_dispatch:
+
 jobs:
   build:
-    timeout-minutes: 8
+    timeout-minutes: 15
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['24.x']
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Checkout the exact commit associated with the pull request.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Use the same Node version as local development and Pages deployment.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # Useful for troubleshooting CI/runtime differences.
+      - name: Display environment
+        run: |
+          node --version
+          npm --version
+
+      # Install exactly the versions recorded in package-lock.json.
       - name: Install dependencies
         run: npm ci
+
+      # Install browsers and Linux dependencies needed by Storybook tests.
       - name: Install Playwright
         run: npx playwright install --with-deps
         timeout-minutes: 10
+
+      # Ensure Storybook can successfully produce its production bundle.
       - name: Build Storybook
         run: npm run build-storybook
-      - name: Run unit test
+
+      # Run the project's Jest unit tests.
+      - name: Run unit tests
         run: npm run test
         timeout-minutes: 10
-      - uses: Eun/http-server-action@v1
+
+      # Serve the generated static Storybook so test-storybook can access it.
+      - name: Start Storybook static server
+        uses: Eun/http-server-action@v1
         with:
           directory: ${{ github.workspace }}/storybook-static
           port: 6006
@@ -45,9 +68,14 @@ jobs:
             ["GET", "HEAD"]
           log: 'log.txt'
           logTime: 'true'
-      - name: Test http server
+
+      # Confirm Storybook is reachable before running browser-based tests.
+      - name: Verify Storybook server
         run: |
-          curl -vvvv http://localhost:6006/index.html
+          curl --fail http://localhost:6006/index.html
           cat log.txt
-      - name: Run tests
+
+      # Run Storybook interaction/component tests.
+      # Requires "test-storybook" to exist in package.json scripts.
+      - name: Run Storybook tests
         run: npm run test-storybook -- --maxWorkers=1 --verbose

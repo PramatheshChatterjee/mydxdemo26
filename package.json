@@ -13,6 +13,7 @@
     "coverage": "jest --coverage --coverageReporters=html",
     "startStorybook": "storybook dev --port 6040 --quiet",
     "build-storybook": "storybook build",
+    "test-storybook": "test-storybook",
     "lint": "eslint .",
     "authenticate": "custom-dx-components authenticate",
     "buildComponent": "custom-dx-components buildComponent",
