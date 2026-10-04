@@ -5,8 +5,8 @@ import { Badge } from './Badge';
 describe('Badge', () => {
   it('renders a read-only label with a decorative icon on its left', () => {
     const { container } = render(<Badge />);
-    const label = screen.getByText('Payable');
-    const icon = screen.getByTestId('ArrowUpwardIcon');
+    const label = screen.getByText('Medical');
+    const icon = screen.getByTestId('LocalHospitalIcon');
     expect(label.previousElementSibling).toBe(icon);
     expect(icon).toHaveAttribute('aria-hidden', 'true');
     expect(icon).toHaveAttribute('focusable', 'false');
@@ -23,7 +23,7 @@ describe('Badge', () => {
         backgroundColor='#E6F8EE'
       />
     );
-    expect(screen.queryByTestId('ArrowUpwardIcon')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('LocalHospitalIcon')).not.toBeInTheDocument();
     expect(screen.getByTestId('ArrowDownwardIcon')).toBeInTheDocument();
     expect(screen.getByText('Receivable').parentElement).toHaveStyle({
       color: '#168447',
@@ -45,13 +45,13 @@ describe('Badge', () => {
 
   it('falls back for invalid colours and accepts trimmed short hex values', () => {
     const { rerender } = render(<Badge foregroundColor='red' backgroundColor='#GGGGGG' />);
-    expect(screen.getByText('Payable').parentElement).toHaveStyle({
+    expect(screen.getByText('Medical').parentElement).toHaveStyle({
       color: '#0057FF',
       backgroundColor: '#EAF4FF'
     });
     rerender(<Badge iconName=' ArrowDownward ' foregroundColor=' #123 ' backgroundColor='#fff' />);
     expect(screen.getByTestId('ArrowDownwardIcon')).toBeInTheDocument();
-    expect(screen.getByText('Payable').parentElement).toHaveStyle({
+    expect(screen.getByText('Medical').parentElement).toHaveStyle({
       color: '#112233',
       backgroundColor: '#ffffff'
     });
