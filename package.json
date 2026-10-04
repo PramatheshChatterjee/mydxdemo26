@@ -69,7 +69,7 @@
     "_lint:spelling": "cspell --no-progress **/*",
     "_lint:types": "tsc --noEmit"
   },
-    "scriptsComments": {
+  "scriptsComments": {
     "build": "tsc -b tsconfig.build.json",
     "fix": "run-p -cl fix:*",
     "fix:es": "eslint --fix .",
@@ -83,6 +83,10 @@
     "pega"
   ],
   "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "6.5.0",
+    "@mui/material": "6.5.0",
     "@pega/cosmos-react-condition-builder": "~9.5.5-8",
     "@pega/cosmos-react-core": "~9.5.5-8",
     "@pega/cosmos-react-work": "~9.5.5-8",

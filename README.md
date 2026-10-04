@@ -4,6 +4,11 @@
 
 This project provides you with an environment to extend Constellation by giving you tools to create and publish custom components that are not available from the Constellation installation.
 
+The **Dxd / CustomUI / Expandable Card** widget is implemented in
+[Dxd_CustomUI_ExpandableCard](./src/components/Dxd_CustomUI_ExpandableCard/README.md).
+See its documentation for App Studio properties, named-view integration, and the
+User, Customer, Credit Card, and Car Model Storybook samples.
+
 ## Before you begin
 
 Review the following checklist before you create a Constellation DX component:

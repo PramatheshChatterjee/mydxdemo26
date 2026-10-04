@@ -6,7 +6,7 @@
     "rulesetName": "CustomDXComponents",
     "rulesetVersion": "01-01-01",
     "sourceOfComponents": "Server",
-    "devBuild": true,
+    "devBuild": false,
     "devServerPort": "3030",
     "serverType": "infinity",
     "server": "https://localhost:1080/prweb",
@@ -37,7 +37,7 @@
     "archiveRulesetVersion": "01-01-01"
   },
   "component": {
-    "library": "YourLibrary",
+    "library": "CustomUI",
     "type": "",
     "version": "1.0.0",
     "subtype": "",
