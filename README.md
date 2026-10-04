@@ -4,6 +4,10 @@
 
 This project provides you with an environment to extend Constellation by giving you tools to create and publish custom components that are not available from the Constellation installation.
 
+## Custom components
+
+- [Icon Badge](src/components/Dxd_mydxdemo26_Badge/README.md): read-only pill with a configurable MUI icon, static text, foreground colour and background colour. Includes Payable and Receivable previews.
+
 ## Before you begin
 
 Review the following checklist before you create a Constellation DX component:

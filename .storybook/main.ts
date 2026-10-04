@@ -5,10 +5,7 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
   framework: {
     name: '@storybook/react-vite',
-    options: {},
-  },
-  docs: {
-    autodocs: 'tag',
-  },
+    options: {}
+  }
 };
 export default config;

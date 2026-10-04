@@ -1,0 +1,44 @@
+{
+    "name": "Dxd_CustomUI_IconBadge",
+    "label": "Icon Badge",
+    "description": "Read-only pill badge with a Material UI icon, static label and hexadecimal colours.",
+    "organization": "Dxd",
+    "version": "1.0.0",
+    "library": "Dxd_CustomUI",
+    "componentKey": "Dxd_CustomUI_IconBadge",
+    "type": "Widget",
+    "subtype": [
+        "PAGE",
+        "CASE"
+    ],
+    "subtypeLabel": "PAGE & CASE",
+    "icon": "OneColumnPage.svg",
+    "properties": [
+        {
+            "name": "iconName",
+            "label": "MUI icon name (e.g. ArrowUpward or ArrowDownward)",
+            "format": "TEXT"
+        },
+        {
+            "name": "label",
+            "label": "Badge text (static)",
+            "format": "TEXT"
+        },
+        {
+            "name": "foregroundColor",
+            "label": "Icon and text colour (hex, e.g. #EC008C)",
+            "format": "TEXT"
+        },
+        {
+            "name": "backgroundColor",
+            "label": "Background colour (hex, e.g. #FCE4F2)",
+            "format": "TEXT"
+        }
+    ],
+    "defaultConfig": {
+        "iconName": "ArrowUpward",
+        "label": "Payable",
+        "foregroundColor": "#0057FF",
+        "backgroundColor": "#EAF4FF"
+    }
+}

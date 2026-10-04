@@ -7,7 +7,7 @@ import {
   ModalManager,
   PopoverManager,
   ShortcutManager,
-  Toaster,
+  Toaster
 } from '@pega/cosmos-react-core';
 
 const preview: Preview = {
@@ -16,13 +16,13 @@ const preview: Preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/i,
-      },
+        date: /Date$/i
+      }
     },
     docs: {
       source: { type: 'code' },
-      theme: Theme,
-    },
+      theme: Theme
+    }
   },
 
   decorators: [
@@ -33,7 +33,7 @@ const preview: Preview = {
           <ShortcutManager>
             <LiveLog maxLength={context.args.liveLogMaxLength || 50}>
               <PopoverManager>
-                <Toaster dismissAfter={5000}>
+                <Toaster>
                   <ModalManager>
                     <Story {...context} />
                   </ModalManager>
@@ -43,8 +43,8 @@ const preview: Preview = {
           </ShortcutManager>
         </Configuration>
       );
-    },
-  ],
+    }
+  ]
 };
 
 export default preview;
