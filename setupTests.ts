@@ -1,9 +1,5 @@
-import { configure } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import 'jest-canvas-mock';
-
-// Wait time needed
-const TIMEOUT = 300000;
 
 // mocks open
 global.open = jest.fn();
@@ -11,8 +7,8 @@ global.open = jest.fn();
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve(() => 'xxx'),
-    arrayBuffer: () => Promise.resolve(() => 'yyy'),
-  }),
+    arrayBuffer: () => Promise.resolve(() => 'yyy')
+  })
 ) as jest.Mock;
 
 window.URL.createObjectURL = jest.fn();
@@ -21,7 +17,7 @@ window.URL.createObjectURL = jest.fn();
 window.ResizeObserver = jest.fn(() => ({
   observe: () => {},
   unobserve: () => {},
-  disconnect: () => {},
+  disconnect: () => {}
 }));
 
 // mocks IntersectionObserver
@@ -32,12 +28,12 @@ window.IntersectionObserver = jest.fn(() => ({
   takeRecords: () => [],
   observe: () => {},
   unobserve: () => {},
-  disconnect: () => {},
+  disconnect: () => {}
 }));
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
@@ -45,8 +41,8 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: jest.fn(), // Deprecated
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+    dispatchEvent: jest.fn()
+  }))
 });
 
 // // mocks createSVGPoint

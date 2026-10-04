@@ -1,0 +1,164 @@
+{
+  "name": "Dxd_CustomUI_ExpandableCard",
+  "label": "Expandable Card",
+  "description": "Read-only information card with an icon, collapsed summary, and configurable Pega views.",
+  "organization": "Dxd",
+  "version": "1.0.0",
+  "library": "CustomUI",
+  "componentKey": "Dxd_CustomUI_ExpandableCard",
+  "type": "Widget",
+  "subtype": ["PAGE", "CASE"],
+  "icon": "OneColumnPage.svg",
+  "properties": [
+    {
+      "name": "header",
+      "label": "Header",
+      "format": "VALUEINPUT",
+      "defaultValue": "Information"
+    },
+    {
+      "name": "iconName",
+      "label": "Avatar icon (Material UI export name)",
+      "format": "TEXT",
+      "defaultValue": "InfoOutlined"
+    },
+    {
+      "name": "foregroundColor",
+      "label": "Icon and header color (hex)",
+      "format": "TEXT",
+      "defaultValue": "#EC008C"
+    },
+    {
+      "name": "backgroundColor",
+      "label": "Avatar background color (hex)",
+      "format": "TEXT",
+      "defaultValue": "#FCE4F2"
+    },
+    {
+      "name": "subHeaderMode",
+      "label": "Subheader format",
+      "format": "SELECT",
+      "defaultValue": "text",
+      "source": [
+        {
+          "key": "text",
+          "value": "Text"
+        },
+        {
+          "key": "badge",
+          "value": "IconBadge widget"
+        }
+      ]
+    },
+    {
+      "name": "subHeaderText",
+      "label": "Subheader text or badge label",
+      "format": "VALUEINPUT"
+    },
+    {
+      "name": "subHeaderBadgeComponent",
+      "label": "Registered IconBadge component key",
+      "format": "TEXT",
+      "defaultValue": "Dxd_CustomUI_IconBadge"
+    },
+    {
+      "name": "subHeaderIconName",
+      "label": "Subheader badge icon",
+      "format": "TEXT",
+      "defaultValue": "InfoOutlined"
+    },
+    {
+      "name": "subHeaderForegroundColor",
+      "label": "Subheader badge foreground (hex; blank inherits header)",
+      "format": "TEXT"
+    },
+    {
+      "name": "subHeaderBackgroundColor",
+      "label": "Subheader badge background (hex; blank inherits avatar)",
+      "format": "TEXT"
+    },
+    {
+      "name": "showSummary",
+      "label": "Show summary when collapsed",
+      "format": "BOOLEAN",
+      "defaultValue": true
+    },
+    {
+      "name": "summaryText",
+      "label": "Collapsed summary",
+      "format": "VALUEINPUT"
+    },
+    {
+      "name": "additionalHeaderViewName",
+      "label": "Additional header view name",
+      "format": "TEXT"
+    },
+    {
+      "name": "detailsViewName",
+      "label": "Expanded details view name",
+      "format": "TEXT"
+    },
+    {
+      "name": "viewClassName",
+      "label": "View class (blank uses current case class)",
+      "format": "TEXT"
+    },
+    {
+      "name": "defaultExpanded",
+      "label": "Initially expanded",
+      "format": "BOOLEAN",
+      "defaultValue": false
+    },
+    {
+      "name": "allowToggle",
+      "label": "Allow expand and collapse",
+      "format": "BOOLEAN",
+      "defaultValue": true
+    },
+    {
+      "label": "Conditions",
+      "format": "GROUP",
+      "properties": [
+        {
+          "name": "visibility",
+          "label": "Visibility",
+          "format": "VISIBILITY"
+        }
+      ]
+    },
+    {
+      "format": "LABEL",
+      "label": "About",
+      "name": "PegaAboutLabel",
+      "variant": "h3"
+    },
+    {
+      "format": "LABEL",
+      "label": "Dxd_CustomUI 1.0.0, Sat Oct 03 2026",
+      "name": "PegaAboutData",
+      "variant": "primary"
+    }
+  ],
+  "defaultConfig": {
+    "header": "Information",
+    "iconName": "InfoOutlined",
+    "foregroundColor": "#EC008C",
+    "backgroundColor": "#FCE4F2",
+    "subHeaderMode": "text",
+    "subHeaderText": "",
+    "subHeaderBadgeComponent": "Dxd_CustomUI_IconBadge",
+    "subHeaderIconName": "InfoOutlined",
+    "subHeaderForegroundColor": "",
+    "subHeaderBackgroundColor": "",
+    "showSummary": true,
+    "summaryText": "",
+    "additionalHeaderViewName": "",
+    "detailsViewName": "",
+    "viewClassName": "",
+    "defaultExpanded": false,
+    "allowToggle": true
+  },
+  "buildDate": "2026-10-04T03:56:26.999Z",
+  "infinityVersion": "",
+  "packageCosmosVersion": "9.5.5-8"
+}

@@ -6,7 +6,8 @@ This project provides you with an environment to extend Constellation by giving 
 
 ## Custom components
 
-- [Icon Badge](src/components/Dxd_mydxdemo26_Badge/README.md): read-only pill with a configurable MUI icon, static text, foreground colour and background colour. Includes Payable and Receivable previews.
+- [Icon Badge](./src/components/Dxd_CustomUI_IconBadge/README.md): read-only badge with configurable icon, label, and colors.
+- [Expandable Card](./src/components/Dxd_CustomUI_ExpandableCard/README.md): read-only card with configurable headers, summary, and details views. Includes User, Customer, Credit Card, and Car Model samples.
 
 ## Before you begin
 

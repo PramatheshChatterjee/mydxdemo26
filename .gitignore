@@ -148,5 +148,7 @@ vite.config.ts.timestamp-*
 # Turbo Repo
 .turbo
 
-# Local Pega DX library archives
+# Local DX Builder archives and generated CustomUI bundles
 store/
+/Dxd_CustomUI/
+/lib/
