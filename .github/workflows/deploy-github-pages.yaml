@@ -1,0 +1,90 @@
+# Publishes the generated Storybook static site to GitHub Pages.
+name: Deploy Storybook to GitHub Pages
+
+# Run automatically when code is pushed to either branch below.
+# workflow_dispatch also allows manual execution from the GitHub Actions UI.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Minimum permissions required for GitHub Pages deployment.
+# contents: read   -> allows the workflow to read repository contents.
+# pages: write     -> allows publishing to GitHub Pages.
+# id-token: write  -> required for secure GitHub Pages deployment authentication.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent overlapping Pages deployments from interfering with each other.
+# Both main and codex-test-1 currently deploy to the SAME GitHub Pages site.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    # Use a GitHub-hosted Linux runner.
+    runs-on: ubuntu-latest
+
+    # Associates this job with GitHub's reserved Pages environment.
+    # The deployed URL is captured from the deployment step below.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # Checkout the branch/commit that triggered this workflow.
+      # This makes the repository files available to later build steps.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Configure the same Node.js version used by the project.
+      # The version is read from the repository's .nvmrc file.
+      # npm caching improves dependency installation performance on later runs.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # Print the effective runtime versions into the Actions log.
+      # Useful when troubleshooting differences between local and CI builds.
+      - name: Display environment
+        run: |
+          echo "Node:"
+          node --version
+          echo "npm:"
+          npm --version
+
+      # Perform a clean, deterministic dependency installation.
+      # npm ci uses package-lock.json exactly and is preferred for CI builds.
+      # package-lock.json must therefore be committed to the repository.
+      - name: Install dependencies
+        run: npm ci
+
+      # Generate the production/static Storybook site.
+      # This runs the package.json script:
+      # "build-storybook": "storybook build"
+      #
+      # Storybook normally writes the generated website to:
+      # storybook-static/
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      # Package the generated Storybook files as a GitHub Pages artifact.
+      # The path must match Storybook's actual build output directory.
+      - name: Upload Storybook artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: storybook-static
+
+      # Publish the uploaded artifact to GitHub Pages.
+      #
+      # The id "deployment" is important because its page_url output
+      # is referenced by the environment.url declaration above.
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
