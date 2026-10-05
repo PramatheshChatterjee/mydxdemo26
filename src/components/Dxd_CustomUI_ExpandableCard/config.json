@@ -134,7 +134,7 @@
     },
     {
       "format": "LABEL",
-      "label": "Dxd_CustomUI 1.0.0, Sat Oct 03 2026",
+      "label": "Dxd_CustomUI 1.0.0, Sun Oct 04 2026, 26.1.1-105720",
       "name": "PegaAboutData",
       "variant": "primary"
     }
@@ -158,7 +158,7 @@
     "defaultExpanded": false,
     "allowToggle": true
   },
-  "buildDate": "2026-10-04T03:56:26.999Z",
-  "infinityVersion": "",
+  "buildDate": "2026-10-05T02:26:14.281Z",
+  "infinityVersion": "26.1.1-105720",
   "packageCosmosVersion": "9.5.5-8"
 }

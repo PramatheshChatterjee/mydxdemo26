@@ -4,7 +4,7 @@
     "description": "Read-only pill badge with a Material UI icon, static label and hexadecimal colours.",
     "organization": "Dxd",
     "version": "1.0.0",
-    "library": "Dxd_CustomUI",
+    "library": "CustomUI",
     "componentKey": "Dxd_CustomUI_IconBadge",
     "type": "Widget",
     "subtype": [
@@ -33,6 +33,18 @@
             "name": "backgroundColor",
             "label": "Background colour (hex, e.g. #FCE4F2)",
             "format": "TEXT"
+        },
+        {
+            "format": "LABEL",
+            "label": "About",
+            "name": "PegaAboutLabel",
+            "variant": "h3"
+        },
+        {
+            "format": "LABEL",
+            "label": "Dxd_CustomUI 1.0.0, Sun Oct 04 2026, 26.1.1-105720",
+            "name": "PegaAboutData",
+            "variant": "primary"
         }
     ],
     "defaultConfig": {
@@ -40,5 +52,8 @@
         "label": "Payable",
         "foregroundColor": "#0057FF",
         "backgroundColor": "#EAF4FF"
-    }
+    },
+    "buildDate": "2026-10-05T02:26:19.708Z",
+    "infinityVersion": "26.1.1-105720",
+    "packageCosmosVersion": "9.5.5-8"
 }
