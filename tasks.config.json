@@ -1,7 +1,7 @@
 {
   "components-directory-path": "src/components",
-  "import-relative-path": "Downloads",
-  "export-relative-path": "Downloads",
+  "import-relative-path": "My_Code/react-sdk-imports",
+  "export-relative-path": "My_Code/react-sdk-exports",
   "server-config": {
     "rulesetName": "CustomDXComponents",
     "rulesetVersion": "01-01-01",
@@ -46,5 +46,5 @@
   },
   "usePromotedWebPack": false,
   "libraryModeCL": true,
-  "showDebug": false
+  "showDebug": true
 }
