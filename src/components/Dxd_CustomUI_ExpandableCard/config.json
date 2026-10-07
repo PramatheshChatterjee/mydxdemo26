@@ -6,36 +6,41 @@
   "version": "1.0.0",
   "library": "CustomUI",
   "componentKey": "Dxd_CustomUI_ExpandableCard",
-  "type": "Widget",
-  "subtype": ["PAGE", "CASE"],
+  "type": "Template",
+  "subtype": "DETAILS",
   "icon": "OneColumnPage.svg",
   "properties": [
     {
       "name": "header",
+      "description": "Heading beside the avatar. Accepts static text or a resolved property value.",
       "label": "Header",
       "format": "VALUEINPUT",
       "defaultValue": "Information"
     },
     {
       "name": "iconName",
+      "description": "Material UI icon export name for the header avatar. Invalid names use InfoOutlined.",
       "label": "Avatar icon (Material UI export name)",
       "format": "TEXT",
       "defaultValue": "InfoOutlined"
     },
     {
       "name": "foregroundColor",
+      "description": "Hexadecimal header icon and text color, independent of the subheader. Defaults to pure black.",
       "label": "Icon and header color (hex)",
       "format": "TEXT",
-      "defaultValue": "#EC008C"
+      "defaultValue": "#000000"
     },
     {
       "name": "backgroundColor",
-      "label": "Avatar background color (hex)",
+      "description": "Hexadecimal header avatar background only. Header text has no background. Defaults to light gray (#E9EEF3) to contrast with a white card.",
+      "label": "Header avatar background color (hex)",
       "format": "TEXT",
-      "defaultValue": "#FCE4F2"
+      "defaultValue": "#E9EEF3"
     },
     {
       "name": "subHeaderMode",
+      "description": "Display the subheader as plain text or an installed IconBadge widget.",
       "label": "Subheader format",
       "format": "SELECT",
       "defaultValue": "text",
@@ -52,65 +57,79 @@
     },
     {
       "name": "subHeaderText",
+      "description": "Optional subheader text or badge label. Accepts static text or a resolved property value.",
       "label": "Subheader text or badge label",
       "format": "VALUEINPUT"
     },
     {
       "name": "subHeaderBadgeComponent",
+      "description": "Registered component key for the IconBadge widget. Missing widgets fall back to text.",
       "label": "Registered IconBadge component key",
       "format": "TEXT",
       "defaultValue": "Dxd_CustomUI_IconBadge"
     },
     {
       "name": "subHeaderIconName",
+      "description": "Material UI icon export name for the subheader badge only.",
       "label": "Subheader badge icon",
       "format": "TEXT",
       "defaultValue": "InfoOutlined"
     },
     {
       "name": "subHeaderForegroundColor",
-      "label": "Subheader badge foreground (hex; blank inherits header)",
-      "format": "TEXT"
+      "description": "Hexadecimal subheader text and badge icon color. Defaults to black independently of the header.",
+      "label": "Subheader foreground color (hex)",
+      "format": "TEXT",
+      "defaultValue": "#000000"
     },
     {
       "name": "subHeaderBackgroundColor",
-      "label": "Subheader badge background (hex; blank inherits avatar)",
-      "format": "TEXT"
+      "description": "Hexadecimal IconBadge subheader background only. Text subheaders have no background. Defaults to white independently of the header.",
+      "label": "Subheader badge background color (hex)",
+      "format": "TEXT",
+      "defaultValue": "#FFFFFF"
     },
     {
       "name": "showSummary",
+      "description": "Show summaryText while details are collapsed. Does not control the persistent summary view.",
       "label": "Show summary when collapsed",
       "format": "BOOLEAN",
       "defaultValue": true
     },
     {
       "name": "summaryText",
+      "description": "Optional summary text shown while details are collapsed and showSummary is enabled.",
       "label": "Collapsed summary",
       "format": "VALUEINPUT"
     },
     {
-      "name": "additionalHeaderViewName",
-      "label": "Additional header view name",
+      "name": "summaryViewName",
+      "description": "Named Pega summary view shown beneath the header in both collapsed and expanded states.",
+      "label": "Summary view name",
       "format": "TEXT"
     },
     {
       "name": "detailsViewName",
+      "description": "Named Pega details view loaded only when expanded. Leave blank to omit the toggle.",
       "label": "Expanded details view name",
       "format": "TEXT"
     },
     {
       "name": "viewClassName",
+      "description": "Class of the named views. Defaults to the current case class; specify the class for embedded page views.",
       "label": "View class (blank uses current case class)",
       "format": "TEXT"
     },
     {
       "name": "defaultExpanded",
+      "description": "Initial expansion state. Changing this input resets the current expansion state.",
       "label": "Initially expanded",
       "format": "BOOLEAN",
       "defaultValue": false
     },
     {
       "name": "allowToggle",
+      "description": "Allow users to expand and collapse details. Disable for a fixed state set by defaultExpanded.",
       "label": "Allow expand and collapse",
       "format": "BOOLEAN",
       "defaultValue": true
@@ -142,17 +161,17 @@
   "defaultConfig": {
     "header": "Information",
     "iconName": "InfoOutlined",
-    "foregroundColor": "#EC008C",
-    "backgroundColor": "#FCE4F2",
+    "foregroundColor": "#000000",
+    "backgroundColor": "#E9EEF3",
     "subHeaderMode": "text",
     "subHeaderText": "",
     "subHeaderBadgeComponent": "Dxd_CustomUI_IconBadge",
     "subHeaderIconName": "InfoOutlined",
-    "subHeaderForegroundColor": "",
-    "subHeaderBackgroundColor": "",
+    "subHeaderForegroundColor": "#000000",
+    "subHeaderBackgroundColor": "#FFFFFF",
     "showSummary": true,
     "summaryText": "",
-    "additionalHeaderViewName": "",
+    "summaryViewName": "",
     "detailsViewName": "",
     "viewClassName": "",
     "defaultExpanded": false,

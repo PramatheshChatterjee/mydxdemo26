@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
-import { Chip, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import type { C11nEnv } from '@pega/pcore-pconnect-typedefs/interpreter/c11n-env';
-import CardIcon from './CardIcon';
+import { Badge } from '../Dxd_CustomUI_IconBadge/Badge';
+import type { BadgeProps } from '../Dxd_CustomUI_IconBadge/Badge';
 
 const sampleViews: Record<string, Record<string, string>> = {
   UserDetails: {
@@ -9,7 +10,7 @@ const sampleViews: Record<string, Record<string, string>> = {
     Role: 'Account manager',
     Location: 'Toronto, Canada'
   },
-  CustomerHeader: { 'Customer since': '2021', Relationship: 'Personal banking' },
+  CustomerSummary: { 'Customer since': '2021', Relationship: 'Personal banking' },
   CustomerDetails: { Name: 'Jordan Taylor', 'Customer ID': 'C-10428', Segment: 'Premier' },
   CreditCardDetails: {
     Network: 'Visa',
@@ -44,19 +45,7 @@ function SampleView({ name }: { name: string }) {
 
 const createComponent = (meta: { type: string; config?: Record<string, unknown> }): ReactNode => {
   if (meta.type === 'Dxd_CustomUI_IconBadge') {
-    // Story-only stand-in for the separately installed DX widget.
-    return (
-      <Chip
-        size='small'
-        icon={<CardIcon name={meta.config?.iconName as string} />}
-        label={meta.config?.header as string}
-        sx={{
-          color: meta.config?.foregroundColor as string,
-          bgcolor: meta.config?.backgroundColor as string,
-          '& .MuiChip-icon': { color: 'inherit' }
-        }}
-      />
-    );
+    return <Badge {...(meta.config as BadgeProps)} />;
   }
   return <SampleView name={meta.config?.name as string} />;
 };
@@ -76,8 +65,13 @@ export function installSamplePCore() {
   const host = globalThis as typeof globalThis & { PCore: typeof PCore };
   const previous = host.PCore;
   host.PCore = {
+    getNameSpaceUtils: () => ({ getDefaultQualifiedName: (key: string) => key }),
+    getEnvironmentInfo: () => ({ getKeyMapping: (key: string) => key }),
+    getRestClient: () => ({ doesRestApiExist: () => false }),
     getViewResources: () => ({
-      fetchViewResources: (name: string) => ({ type: 'View', config: { name } })
+      fetchViewResources: (name: string) =>
+        sampleViews[name] ? { type: 'View', config: { name } } : undefined,
+      updateViewResources: async () => undefined
     }),
     createPConnect: () => ({ getPConnect: getSamplePConnect })
   } as unknown as typeof PCore;

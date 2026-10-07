@@ -1,6 +1,7 @@
 import * as MaterialIcons from '@mui/icons-material';
 
 import StyledBadge from './styles';
+import { hexColor } from '../shared/utils';
 
 export interface BadgeProps {
   iconName?: string;
@@ -11,12 +12,6 @@ export interface BadgeProps {
 
 const DEFAULT_FOREGROUND = '#0057FF';
 const DEFAULT_BACKGROUND = '#EAF4FF';
-
-// Accept CSS hexadecimal colours only, including short and alpha forms.
-function hexColor(value: string | undefined, fallback: string) {
-  const color = typeof value === 'string' ? value.trim() : '';
-  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(color) ? color : fallback;
-}
 
 export function Badge({
   iconName = 'LocalHospital',

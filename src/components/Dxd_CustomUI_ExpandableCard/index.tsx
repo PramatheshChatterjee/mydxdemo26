@@ -8,7 +8,7 @@ import '../shared/create-nonce';
 import CardIcon from './CardIcon';
 import { ExpandableCardHeaderBadge, ExpandableCardView } from './ExpandableCardContent';
 import StyledExpandableCardWrapper, { useCardTheme } from './styles';
-import { booleanValue, hexColor, textValue } from './utils';
+import { booleanValue, hexColor, textValue } from '../shared/utils';
 import type { ExpandableCardProps } from './types';
 
 export type { ExpandableCardProps, IconBadgeProps } from './types';
@@ -16,7 +16,7 @@ export type { ExpandableCardProps, IconBadgeProps } from './types';
 export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
   const {
     getPConnect,
-    iconName,
+    headerProps,
     subHeaderMode,
     subHeaderBadgeProps,
     subHeaderIconName,
@@ -25,14 +25,21 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
   } = props;
   // Normalize configuration at the boundary: blank strings, invalid colors, and
   // serialized booleans should not leak into rendering or JavaScript truthiness checks.
-  const header = textValue(props.header, 'Information');
+  const header = textValue(headerProps?.header, textValue(props.header, 'Information'));
+  const iconName = textValue(headerProps?.iconName, textValue(props.iconName, 'InfoOutlined'));
   const subHeader = textValue(props.subHeaderText);
   const summary = textValue(props.summaryText);
-  const headerView = textValue(props.additionalHeaderViewName);
+  const summaryView = textValue(props.summaryViewName);
   const detailsView = textValue(props.detailsViewName);
   const viewClass = textValue(props.viewClassName);
-  const foreground = hexColor(props.foregroundColor, '#EC008C');
-  const background = hexColor(props.backgroundColor, '#FCE4F2');
+  const foreground = hexColor(
+    headerProps?.foregroundColor,
+    hexColor(props.foregroundColor, '#000000')
+  );
+  const background = hexColor(
+    headerProps?.backgroundColor,
+    hexColor(props.backgroundColor, '#E9EEF3')
+  );
   const configuredExpanded = booleanValue(props.defaultExpanded);
   const [expanded, setExpanded] = useState(configuredExpanded);
   // User toggles remain local; changing the configured initial state resets the card
@@ -50,7 +57,7 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
   const { tokens, muiTheme } = useCardTheme(cosmosTheme);
 
   // Object-based badge configuration takes precedence over App Studio's individual
-  // badge fields; omitted colors inherit the card's configured colors.
+  // badge fields. Header and subheader defaults are independent.
   const badgeProps = {
     iconName: textValue(
       subHeaderBadgeProps?.iconName,
@@ -59,11 +66,11 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
     header: textValue(subHeaderBadgeProps?.header, subHeader),
     foregroundColor: hexColor(
       subHeaderBadgeProps?.foregroundColor,
-      hexColor(subHeaderForegroundColor, foreground)
+      hexColor(subHeaderForegroundColor, '#000000')
     ),
     backgroundColor: hexColor(
       subHeaderBadgeProps?.backgroundColor,
-      hexColor(subHeaderBackgroundColor, background)
+      hexColor(subHeaderBackgroundColor, '#FFFFFF')
     )
   };
 
@@ -75,32 +82,27 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
         role='region'
         aria-labelledby={headingID}
       >
-        <Box sx={{ padding: tokens.padding }}>
+        <Box sx={{ padding: `calc(${tokens.gap} * 2.5)` }}>
           <Stack direction='row' alignItems='center' sx={{ gap: `calc(${tokens.gap} * 2)` }}>
             <Avatar
               aria-hidden
               sx={{
-                width: tokens['avatar-size'],
-                height: tokens['avatar-size'],
+                width: `calc(${tokens.gap} * 6)`,
+                height: `calc(${tokens.gap} * 6)`,
                 bgcolor: background,
                 color: foreground,
-                fontSize: '1.5rem',
+                fontSize: `calc(${tokens['font-size']} * 1.5)`,
                 flexShrink: 0
               }}
             >
               <CardIcon name={iconName} />
             </Avatar>
             <Box sx={{ minWidth: 0, flex: 1, overflowWrap: 'anywhere' }}>
-              <Typography
-                id={headingID}
-                component='h2'
-                variant='h6'
-                sx={{ color: foreground, fontWeight: 600, lineHeight: 1.4 }}
-              >
+              <Typography id={headingID} component='h2' variant='h6' sx={{ color: foreground }}>
                 {header}
               </Typography>
               {subHeaderMode === 'badge' ? (
-                <Box sx={{ mt: 0.5 }}>
+                <Box className='expandable-card-subheader' sx={{ mt: `calc(${tokens.gap} * 0.5)` }}>
                   <ExpandableCardHeaderBadge
                     getPConnect={getPConnect}
                     componentName={textValue(
@@ -111,9 +113,16 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
                   />
                 </Box>
               ) : (
-                subHeader && (
-                  <Typography variant='body2' sx={{ mt: 0.5 }}>
-                    {subHeader}
+                badgeProps.header && (
+                  <Typography
+                    variant='body2'
+                    sx={{
+                      mt: `calc(${tokens.gap} * 0.5)`,
+                      color: badgeProps.foregroundColor,
+                      fontSize: tokens['subheader-font-size']
+                    }}
+                  >
+                    {badgeProps.header}
                   </Typography>
                 )
               )}
@@ -125,24 +134,31 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
                 aria-expanded={expanded}
                 aria-controls={detailsID}
                 onClick={() => setExpanded(value => !value)}
-                sx={{ flexShrink: 0, color: 'inherit' }}
+                sx={{
+                  flexShrink: 0,
+                  color: 'inherit',
+                  padding: tokens.gap,
+                  '&.Mui-focusVisible': { boxShadow: tokens['focus-shadow'] }
+                }}
               >
                 {expanded ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
             )}
           </Stack>
-          {headerView && (
-            <Box sx={{ mt: 2 }}>
+          {summaryView && (
+            <Box sx={{ mt: `calc(${tokens.gap} * 2)` }}>
               <ExpandableCardView
-                name={headerView}
+                name={summaryView}
                 className={viewClass}
                 getPConnect={getPConnect}
               />
             </Box>
           )}
           {!showDetails && booleanValue(props.showSummary, true) && summary && (
-            <Box sx={{ mt: 2, overflowWrap: 'anywhere' }}>
-              <Divider sx={{ mb: 2, borderColor: tokens['border-color'] }} />
+            <Box sx={{ mt: `calc(${tokens.gap} * 2)`, overflowWrap: 'anywhere' }}>
+              <Divider
+                sx={{ mb: `calc(${tokens.gap} * 2)`, borderColor: tokens['border-color'] }}
+              />
               <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }}>
                 {summary}
               </Typography>
@@ -156,7 +172,13 @@ export function DxdCustomUIExpandableCard(props: ExpandableCardProps) {
             {showDetails && (
               <>
                 <Divider sx={{ borderColor: tokens['border-color'] }} />
-                <Box sx={{ padding: tokens.padding, overflowWrap: 'anywhere', minWidth: 0 }}>
+                <Box
+                  sx={{
+                    padding: `calc(${tokens.gap} * 2.5)`,
+                    overflowWrap: 'anywhere',
+                    minWidth: 0
+                  }}
+                >
                   <ExpandableCardView
                     name={detailsView}
                     className={viewClass}

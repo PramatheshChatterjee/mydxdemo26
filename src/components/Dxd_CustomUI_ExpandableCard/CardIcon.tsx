@@ -1,6 +1,6 @@
 import * as icons from '@mui/icons-material';
 import type { SvgIconComponent } from '@mui/icons-material';
-import { textValue } from './utils';
+import { textValue } from '../shared/utils';
 
 // Use the installed export table, never a URL or a user-controlled module path.
 // The full catalog intentionally supports every valid MUI 6.5 icon name.

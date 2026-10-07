@@ -15,7 +15,7 @@ let getPConnect: NonNullable<ExpandableCardProps['getPConnect']>;
 
 beforeEach(() => {
   originalPCore = host.PCore;
-  createComponent = jest.fn(meta => <div>{meta.config.name || meta.config.header}</div>);
+  createComponent = jest.fn(meta => <div>{meta.config.name || meta.config.label}</div>);
   setInheritedProp = jest.fn();
   fetchViewResources = jest.fn(name => ({ type: 'View', config: { name } }));
   invokeRestApi = jest.fn();
@@ -28,6 +28,8 @@ beforeEach(() => {
   } as unknown as C11nEnv;
   getPConnect = () => parent;
   host.PCore = {
+    getNameSpaceUtils: () => ({ getDefaultQualifiedName: (key: string) => key }),
+    getEnvironmentInfo: () => ({ getKeyMapping: (key: string) => key }),
     getViewResources: () => ({ fetchViewResources, updateViewResources }),
     getRestClient: () => ({ invokeRestApi, doesRestApiExist: () => true }),
     createPConnect: jest.fn(() => ({ getPConnect: () => ({ createComponent, setInheritedProp }) }))
@@ -50,7 +52,13 @@ test.each(['constructor', '__esModule', 'NotAnIcon'])(
   'falls back for invalid icon %s and colors',
   iconName => {
     render(card({ iconName, foregroundColor: 'bad', backgroundColor: 'url(bad)' }));
-    expect(screen.getByRole('heading', { name: 'Information' })).toHaveStyle({ color: '#EC008C' });
+    expect(screen.getByRole('heading', { name: 'Information' })).toHaveStyle({
+      color: '#000000',
+      backgroundColor: ''
+    });
+    expect(screen.getByTestId('InfoOutlinedIcon').parentElement).toHaveStyle({
+      backgroundColor: '#E9EEF3'
+    });
     expect(screen.getByTestId('InfoOutlinedIcon')).toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   }
@@ -62,6 +70,98 @@ test('renders a valid configurable icon to the left of the heading', () => {
   const heading = screen.getByRole('heading', { name: 'Balance' });
   expect(icon.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(heading).toHaveStyle({ color: '#123456' });
+});
+
+test('configures header and subheader independently, including text mode', () => {
+  const { rerender } = render(
+    card({
+      headerProps: { header: 'Header', foregroundColor: '#123456', backgroundColor: '#FEDCBA' },
+      subHeaderBadgeProps: {
+        header: 'Subheader',
+        foregroundColor: '#654321',
+        backgroundColor: '#ABCDEF'
+      }
+    })
+  );
+  expect(screen.getByRole('heading', { name: 'Header' })).toHaveStyle({
+    color: '#123456',
+    backgroundColor: ''
+  });
+  expect(screen.getByTestId('InfoOutlinedIcon').parentElement).toHaveStyle({
+    backgroundColor: '#FEDCBA'
+  });
+  expect(screen.getByText('Subheader')).toHaveStyle({
+    color: '#654321',
+    backgroundColor: ''
+  });
+  rerender(
+    card({
+      foregroundColor: '#123456',
+      backgroundColor: '#FEDCBA',
+      subHeaderText: 'Independent defaults'
+    })
+  );
+  expect(screen.getByText('Independent defaults')).toHaveStyle({
+    color: '#000000',
+    backgroundColor: ''
+  });
+});
+
+test('uses independent flat badge colors and preserves header defaults', () => {
+  render(
+    card({
+      header: 'Header',
+      subHeaderMode: 'badge',
+      subHeaderText: 'Blue badge',
+      subHeaderForegroundColor: '#123456',
+      subHeaderBackgroundColor: '#ABCDEF'
+    })
+  );
+  expect(screen.getByRole('heading', { name: 'Header' })).toHaveStyle({
+    color: '#000000',
+    backgroundColor: ''
+  });
+  expect(screen.getByTestId('InfoOutlinedIcon').parentElement).toHaveStyle({
+    backgroundColor: '#E9EEF3'
+  });
+  expect(createComponent).toHaveBeenCalledWith(
+    expect.objectContaining({
+      config: expect.objectContaining({
+        label: 'Blue badge',
+        foregroundColor: '#123456',
+        backgroundColor: '#ABCDEF'
+      })
+    })
+  );
+});
+
+test('follows base spacing, typography, and semantic border tokens', () => {
+  render(
+    <Configuration
+      disableDefaultFontLoading
+      theme={{
+        base: {
+          spacing: '1rem',
+          'font-size': '1.2rem',
+          'font-weight': { 'semi-bold': 700 },
+          palette: { 'border-line': '#123456' }
+        }
+      }}
+    >
+      <ExpandableCard header='Theme tokens' subHeaderText='Body text' />
+    </Configuration>
+  );
+  expect(screen.getByRole('region', { name: 'Theme tokens' })).toHaveStyle({
+    borderColor: '#123456'
+  });
+  expect(screen.getByRole('heading', { name: 'Theme tokens' })).toHaveStyle({
+    fontWeight: 700,
+    fontSize: '1.5em'
+  });
+  expect(screen.getByText('Body text')).toHaveStyle({ fontSize: '1.2rem' });
+  expect(screen.getByTestId('InfoOutlinedIcon').parentElement).toHaveStyle({
+    width: 'calc(1rem * 6)'
+  });
 });
 
 test('updates the styled wrapper when the application Cosmos theme changes', () => {
@@ -109,16 +209,16 @@ test('loads details only on expansion and restores the collapsed summary', async
   expect(screen.queryByText('CustomerDetails')).not.toBeInTheDocument();
 });
 
-test('keeps the header view visible and uses an isolated, read-only Pega context', async () => {
+test('keeps the summary view visible and uses an isolated, read-only Pega context', async () => {
   render(
     card({
-      additionalHeaderViewName: 'HeaderView',
+      summaryViewName: 'SummaryView',
       detailsViewName: 'DetailsView',
       defaultExpanded: true,
       viewClassName: 'Demo-Data-Customer'
     })
   );
-  expect(await screen.findByText('HeaderView')).toBeVisible();
+  expect(await screen.findByText('SummaryView')).toBeVisible();
   expect(await screen.findByText('DetailsView')).toBeVisible();
   expect(PCore.createPConnect).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -199,7 +299,7 @@ test('delegates badge props to the installed widget and falls back when unavaila
   expect(createComponent).toHaveBeenCalledWith({
     type: 'Acme_UI_IconBadge',
     config: {
-      header: 'Active',
+      label: 'Active',
       iconName: 'ArrowUpward',
       foregroundColor: '#123456',
       backgroundColor: '#fff',
@@ -234,6 +334,54 @@ test('handles rejected view loads without crashing the card', async () => {
   render(card({ header: 'Customer', detailsViewName: 'Missing', defaultExpanded: true }));
   expect(await screen.findByText('Content unavailable.')).toBeVisible();
   expect(screen.getByRole('heading', { name: 'Customer' })).toBeVisible();
+});
+
+test('does not call an unavailable view API', async () => {
+  fetchViewResources.mockReturnValue(undefined);
+  host.PCore = {
+    ...host.PCore,
+    getRestClient: () => ({ invokeRestApi, doesRestApiExist: () => false })
+  } as unknown as typeof PCore;
+  render(card({ detailsViewName: 'Missing', defaultExpanded: true }));
+  expect(await screen.findByText('Content unavailable.')).toBeVisible();
+  expect(invokeRestApi).not.toHaveBeenCalled();
+});
+
+test('renders cached embedded-page views without a case and never fetches without an ID', async () => {
+  const parent = { ...getPConnect(), getCaseInfo: () => undefined } as unknown as C11nEnv;
+  const { rerender } = render(
+    card({
+      getPConnect: () => parent,
+      summaryViewName: 'Embedded',
+      viewClassName: 'Demo-Data-Customer'
+    })
+  );
+  expect(await screen.findByText('Embedded')).toBeVisible();
+  expect(PCore.createPConnect).toHaveBeenCalledWith(
+    expect.objectContaining({
+      options: expect.objectContaining({ pageReference: 'caseInfo.content.Customer' })
+    })
+  );
+  fetchViewResources.mockReturnValue(undefined);
+  rerender(
+    card({
+      getPConnect: () => parent,
+      summaryViewName: 'Missing',
+      viewClassName: 'Demo-Data-Customer'
+    })
+  );
+  expect(await screen.findByText('Content unavailable.')).toBeVisible();
+  expect(invokeRestApi).not.toHaveBeenCalled();
+});
+
+test('maps named views through the host namespace and key mapping', async () => {
+  host.PCore = {
+    ...host.PCore,
+    getNameSpaceUtils: () => ({ getDefaultQualifiedName: (key: string) => `App__${key}` }),
+    getEnvironmentInfo: () => ({ getKeyMapping: (key: string) => `${key}_Mapped` })
+  } as unknown as typeof PCore;
+  render(card({ summaryViewName: 'Summary' }));
+  expect(await screen.findByText('App__Summary_Mapped')).toBeVisible();
 });
 
 test('ignores stale requests when the view changes', async () => {

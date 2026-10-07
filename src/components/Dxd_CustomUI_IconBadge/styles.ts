@@ -10,14 +10,14 @@ const StyledBadge = styled.span`
   border-radius: 999px;
   vertical-align: middle;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: var(--icon-badge-font-size, 1rem);
   font-weight: 500;
   line-height: 1.5;
 
   .badge-icon {
     flex-shrink: 0;
-    width: 1.5em;
-    height: 1.5em;
+    width: var(--icon-badge-icon-size, 1.5em);
+    height: var(--icon-badge-icon-size, 1.5em);
     font-size: inherit;
     color: inherit;
   }

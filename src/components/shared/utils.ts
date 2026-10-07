@@ -15,3 +15,9 @@ export const hexColor = (value: unknown, fallback: string): string =>
   /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value.trim())
     ? value.trim()
     : fallback;
+
+/** Resolve host namespaces and identifier mappings on Platform and Launchpad. */
+export const getMappedKey = (key: string): string => {
+  const qualifiedName = PCore.getNameSpaceUtils().getDefaultQualifiedName(key);
+  return PCore.getEnvironmentInfo().getKeyMapping(qualifiedName) || qualifiedName;
+};
